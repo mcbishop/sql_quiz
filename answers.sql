@@ -280,3 +280,102 @@ made by customer 100.
 
 
 select id, status, order_total from orders where (customer_id=100);
+
+
+==========
+21
+
+-----
+
+Write a single query that shows the id, status, and order total for all
+orders made by 'pclark74@gmail.com'. Use a subselect to do this.
+
+
+-----
+
+
+select id, status, order_total from orders where customer_id = (select id from customers where email = 'pclark74@gmail.com');
+
+
+==========
+22
+
+-----
+
+Write a query that shows the id, status, and order total for all orders
+made by 'pclark74@gmail.com'. Use a join to do this.
+
+-----
+
+
+select orders.id, orders.status, order_total from orders join customers on (orders.customer_id=customers.id) where customers.email = 'pclark74@gmail.com'; 
+
+
+==========
+23
+
+-----
+
+Write a query that shows all columns in the order_items table for order #2725.
+
+-----
+
+
+select * from order_items where order_id = 2725;
+
+
+==========
+24
+
+-----
+
+Write a query that shows the common_name, melon_type, quantity,
+unit_price and total_price for all the melons in order #2725.
+
+-----
+
+
+select melons.common_name, melons.melon_type, order_items.quantity, order_items.unit_price, order_items.total_price from order_items join melons on (order_items.melon_id=melons.id) WHERE order_items.order_id = 2725;
+
+
+==========
+25
+
+-----
+
+Write a query that shows the total amount of revenue that comes from
+internet orders.
+
+-----
+
+
+SELECT SUM(order_total)  FROM orders where salesperson_id is NULL;
+
+
+==========
+26
+
+-----
+
+Challenge: Produce a list of all salespeople and the total amount of orders
+they've sold, while calculating a 15% commission on all of their orders.
+Include their first name, last name, the total of all their sales, and their
+commission. Only report one row per salesperson. Include salespeople who have
+not made any sales.
+
+You will need 'left join' (http://sqlzoo.net/wiki/LEFT_JOIN) and 'group by'
+(http://sqlzoo.net/wiki/SELECT_.._GROUP_BY) clauses to finish this one.
+
+-----
+
+
+select
+salespeople.first_name, 
+salespeople.last_name,
+sum(orders.order_total),
+(sum(orders.order_total)*.15) as commission
+from salespeople
+left join orders
+on (salespeople.id = orders.salesperson_id)
+group by salespeople.id
+;
